@@ -20,6 +20,7 @@ import { FormControl, FormMessage } from "@/src/components/ui/form";
 import { FormItem, FormLabel } from "@/src/components/ui/form";
 import { Form, FormField } from "@/src/components/ui/form";
 import { Input } from "@/src/components/ui/input";
+import { authClient } from "@/src/lib/auth-client";
 // import { authClient } from "@/lib/auth-client";
 
 const registerSchema = z.object({
@@ -47,26 +48,25 @@ const SignUpForm = () => {
   });
 
   async function onSubmit(values: z.infer<typeof registerSchema>) {
-    console.log(values);
-    // await authClient.signUp.email(
-    //   {
-    //     email: values.email,
-    //     password: values.password,
-    //     name: values.name,
-    //   },
-    //   {
-    //     onSuccess: () => {
-    //       router.push("/dashboard");
-    //     },
-    //     onError: (ctx) => {
-    //       if (ctx.error.code === "USER_ALREADY_EXISTS") {
-    //         toast.error("E-mail já cadastrado.");
-    //         return;
-    //       }
-    //       toast.error("Erro ao criar conta.");
-    //     },
-    //   },
-    // );
+    await authClient.signUp.email(
+      {
+        email: values.email,
+        password: values.password,
+        name: values.name,
+      },
+      {
+        onSuccess: () => {
+          router.push("/dashboard");
+        },
+        onError: (ctx) => {
+          if (ctx.error.code === "USER_ALREADY_EXISTS") {
+            toast.error("E-mail já cadastrado.");
+            return;
+          }
+          toast.error("Erro ao criar conta.");
+        },
+      },
+    );
   }
 
   return (
