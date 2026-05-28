@@ -19,7 +19,8 @@ import { FormControl, FormMessage } from "../../../components/ui/form";
 import { FormItem, FormLabel } from "../../../components/ui/form";
 import { Form, FormField } from "../../../components/ui/form";
 import { Input } from "../../../components/ui/input";
-// import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
 
 const loginSchema = z.object({
   email: z
@@ -44,29 +45,29 @@ const LoginForm = () => {
   });
 
   const handleSubmit = async (values: z.infer<typeof loginSchema>) => {
-    // await authClient.signIn.email(
-    //   {
-    //     email: values.email,
-    //     password: values.password,
-    //   },
-    //   {
-    //     onSuccess: () => {
-    //       router.push("/dashboard");
-    //     },
-    //     onError: () => {
-    //       toast.error("E-mail ou senha inválidos.");
-    //     },
-    //   },
-    // );
+    await authClient.signIn.email(
+      {
+        email: values.email,
+        password: values.password,
+      },
+      {
+        onSuccess: () => {
+          router.push("/dashboard");
+        },
+        onError: () => {
+          toast.error("E-mail ou senha inválidos.");
+        },
+      },
+    );
   };
 
-  // const handleGoogleLogin = async () => {
-  //   await authClient.signIn.social({
-  //     provider: "google",
-  //     callbackURL: "/dashboard",
-  //     scopes: ["email", "profile"],
-  //   });
-  // };
+  const handleGoogleLogin = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/dashboard",
+      scopes: ["email", "profile"],
+    });
+  };
 
   return (
     <Card>
