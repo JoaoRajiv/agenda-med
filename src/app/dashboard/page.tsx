@@ -1,16 +1,22 @@
-import { Button } from "@/components/ui/button";
 import { auth } from "@/lib/auth";
-import { authClient } from "@/lib/auth-client";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import SignOutButton from "./components/sign-out-button";
+import { db } from "@/db";
+import { eq } from "drizzle-orm";
+import { usersToClinicTable } from "@/db/schema";
 
 const DashboardPage = async () => {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) {
     redirect("/authentication");
   }
-
+  const clinics = await db.query.usersToClinicTable.findMany({
+    where: eq(usersToClinicTable.userId, session.user.id),
+  });
+  if (clinics.length === 0) {
+    redirect("/clinic-form");
+  }
   return (
     <div className="flex h-screen flex-col items-center justify-center">
       <h1 className="mb-4 text-2xl font-bold">
