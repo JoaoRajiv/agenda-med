@@ -5,6 +5,7 @@ import SignOutButton from "./components/sign-out-button";
 import { db } from "@/db";
 import { eq } from "drizzle-orm";
 import { usersToClinicTable } from "@/db/schema";
+import Image from "next/image";
 
 const DashboardPage = async () => {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -19,6 +20,13 @@ const DashboardPage = async () => {
   }
   return (
     <div className="flex h-screen flex-col items-center justify-center">
+      <Image
+        src={session?.user.image || "/default-avatar.png"}
+        alt="Welcome"
+        width={50}
+        height={50}
+        className="mb-6 rounded-full"
+      />
       <h1 className="mb-4 text-2xl font-bold">
         Bem-vindo {session?.user.name || "Usuário"}!
       </h1>

@@ -126,7 +126,7 @@ const LoginForm = () => {
                 variant="outline"
                 className="w-full"
                 type="button"
-                // onClick={handleGoogleLogin}
+                onClick={handleGoogleLogin}
               >
                 <svg viewBox="0 0 24 24" className="mr-2 h-4 w-4">
                   <path
