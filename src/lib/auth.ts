@@ -27,13 +27,16 @@ export const auth = betterAuth({
         },
       });
       // Alterar a quantidade quando for usar várias clínicas por usuário
-      const clinic = clinics[0];
+      const clinic = clinics?.[0];
       return {
         user: {
           ...user,
-          clinic: {
-            name: clinic?.clinic.name,
-          },
+          clinic: clinic?.clinicId
+            ? {
+                id: clinic?.clinic?.id,
+                name: clinic?.clinic?.name,
+              }
+            : null,
         },
         session,
       };
