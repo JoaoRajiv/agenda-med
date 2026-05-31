@@ -73,7 +73,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarHeader className="flex flex-row border-b p-4">
         <Image src="/logo.svg" alt="Doutor Agenda" width={28} height={28} />
-        <span className="font-mono text-lg font-semibold">agenda.med</span>
+        <span className="font-nunito text-lg font-bold">agenda.med</span>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
@@ -101,12 +101,23 @@ export function AppSidebar() {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton size="lg">
                   <Avatar>
-                    <AvatarFallback>F</AvatarFallback>
+                    <AvatarFallback>
+                      {session.data?.user?.image ? (
+                        <Image
+                          src={session.data.user.image}
+                          alt={session.data.user.name}
+                          width={32}
+                          height={32}
+                        />
+                      ) : (
+                        session.data?.user?.name?.[0] || "U"
+                      )}
+                    </AvatarFallback>
                   </Avatar>
                   <div>
-                    {/* <p className="text-sm">
+                    <p className="text-sm">
                       {session.data?.user?.clinic?.name}
-                    </p> */}
+                    </p>
                     <p className="text-muted-foreground text-sm">
                       {session.data?.user.email}
                     </p>
