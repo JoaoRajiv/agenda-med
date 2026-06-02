@@ -83,7 +83,7 @@ export const doctorsTable = pgTable("doctors", {
     .references(() => clinicsTable.id, { onDelete: "cascade" })
     .notNull(),
   name: text("name").notNull(),
-  avatarImageUrl: text("avatar_image_url").notNull(),
+  avatarImageUrl: text("avatar_image_url"),
   specialty: text("specialty").notNull(),
   appointmentPriceInCents: integer("appointment_price_in_cents").notNull(),
 

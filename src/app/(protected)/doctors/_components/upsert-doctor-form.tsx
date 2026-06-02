@@ -47,8 +47,8 @@ const formSchema = z
     appointmentPrice: z.number().min(1, {
       message: "Preço da consulta é obrigatório.",
     }),
-    availableFromWeekDay: z.string(),
-    availableToWeekDay: z.string(),
+    availableFromWeekday: z.string(),
+    availableToWeekday: z.string(),
     availableFromTime: z.string().min(1, {
       message: "Hora de início é obrigatória.",
     }),
@@ -87,8 +87,8 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
       appointmentPrice: doctor?.appointmentPriceInCents
         ? doctor.appointmentPriceInCents / 100
         : 0,
-      availableFromWeekDay: doctor?.availableFromWeekday?.toString() ?? "1",
-      availableToWeekDay: doctor?.availableToWeekday?.toString() ?? "5",
+      availableFromWeekday: doctor?.availableFromWeekday?.toString() ?? "1",
+      availableToWeekday: doctor?.availableToWeekday?.toString() ?? "5",
       availableFromTime: doctor?.availableFromTime ?? "",
       availableToTime: doctor?.availableToTime ?? "",
     },
@@ -107,8 +107,8 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
     upsertDoctorAction.execute({
       ...values,
       id: doctor?.id,
-      availableFromWeekDay: parseInt(values.availableFromWeekDay),
-      availableToWeekDay: parseInt(values.availableToWeekDay),
+      availableFromWeekday: parseInt(values.availableFromWeekday),
+      availableToWeekday: parseInt(values.availableToWeekday),
       appointmentPriceInCents: values.appointmentPrice * 100,
     });
   };
@@ -191,7 +191,7 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
           />
           <FormField
             control={form.control}
-            name="availableFromWeekDay"
+            name="availableFromWeekday"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Dia inicial de disponibilidade</FormLabel>
@@ -220,7 +220,7 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
           />
           <FormField
             control={form.control}
-            name="availableToWeekDay"
+            name="availableToWeekday"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Dia final de disponibilidade</FormLabel>
