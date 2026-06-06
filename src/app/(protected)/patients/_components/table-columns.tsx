@@ -6,6 +6,7 @@ import { patientsTable } from "@/db/schema";
 
 import PatientsTableActions from "./table-actions";
 import { formatPhoneNumber } from "@/_helpers/format-number-phone";
+import { Badge } from "@/components/ui/badge";
 
 type Patient = typeof patientsTable.$inferSelect;
 
@@ -37,14 +38,18 @@ export const patientsTableColumns: ColumnDef<Patient>[] = [
     header: "Sexo",
     cell: (params) => {
       const { sex } = params.row.original;
-      switch (sex) {
-        case "male":
-          return "Masculino";
-        case "female":
-          return "Feminino";
-        default:
-          return "Outro";
-      }
+      return (
+        <Badge
+          variant="outline"
+          className={`${sex === "male" ? "bg-blue-100 text-blue-800" : sex === "female" ? "bg-pink-100 text-pink-800" : "bg-gray-100 text-gray-800"}`}
+        >
+          {sex === "male"
+            ? "Masculino"
+            : sex === "female"
+              ? "Feminino"
+              : "Outro"}
+        </Badge>
+      );
     },
   },
   {
