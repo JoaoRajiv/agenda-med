@@ -8,23 +8,23 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { UpsertPatientForm } from "./upsert-patient-form";
+
 import { useState } from "react";
+import UpsertPatientForm from "./upsert-patient-form";
+import { Plus } from "lucide-react";
 
 const AddPatientButton = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={(open) => setIsOpen(open)}>
       <DialogTrigger asChild>
-        <Button>Adicionar Paciente</Button>
+        <Button size="sm">
+          <Plus />
+          Adicionar Paciente
+        </Button>
       </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Adicionar novo paciente</DialogTitle>
-        </DialogHeader>
-        <UpsertPatientForm onSuccess={() => setIsOpen(false)} />
-      </DialogContent>
+      <UpsertPatientForm onSuccess={() => setIsOpen(false)} />
     </Dialog>
   );
 };
