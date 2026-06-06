@@ -1,11 +1,12 @@
 "use client";
 
+import { Plus } from "lucide-react";
+import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 
-import { useState } from "react";
 import UpsertPatientForm from "./upsert-patient-form";
-import { Plus } from "lucide-react";
 
 const AddPatientButton = () => {
   const [isOpen, setIsOpen] = useState(false);

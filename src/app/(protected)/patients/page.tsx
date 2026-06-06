@@ -1,3 +1,8 @@
+import { eq } from "drizzle-orm";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+
+import { DataTable } from "@/components/ui/data-table";
 import {
   PageActions,
   PageContainer,
@@ -7,14 +12,11 @@ import {
   PageHeaderContent,
   PageTitle,
 } from "@/components/ui/page-container";
-import AddPatientButton from "./_components/add-patient-button";
 import { db } from "@/db";
-import { auth } from "@/lib/auth";
-import { eq } from "drizzle-orm";
 import { patientsTable } from "@/db/schema";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
-import { DataTable } from "@/components/ui/data-table";
+import { auth } from "@/lib/auth";
+
+import AddPatientButton from "./_components/add-patient-button";
 import { patientsTableColumns } from "./_components/table-columns";
 
 export default async function PatientsPage() {

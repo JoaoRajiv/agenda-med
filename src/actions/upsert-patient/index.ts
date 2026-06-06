@@ -1,13 +1,15 @@
 "use server";
 
-import { auth } from "@/lib/auth";
-import { db } from "@/db";
-import { patientsTable } from "@/db/schema";
-import { upsertPatientSchema } from "./schema";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { actionClient } from "@/lib/next-safe-action";
 import { headers } from "next/headers";
+
+import { db } from "@/db";
+import { patientsTable } from "@/db/schema";
+import { auth } from "@/lib/auth";
+import { actionClient } from "@/lib/next-safe-action";
+
+import { upsertPatientSchema } from "./schema";
 
 export const upsertPatient = actionClient
   .schema(upsertPatientSchema)

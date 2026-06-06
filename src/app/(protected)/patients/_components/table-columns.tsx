@@ -2,11 +2,11 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 
+import { formatPhoneNumber } from "@/_helpers/format-number-phone";
+import { Badge } from "@/components/ui/badge";
 import { patientsTable } from "@/db/schema";
 
 import PatientsTableActions from "./table-actions";
-import { formatPhoneNumber } from "@/_helpers/format-number-phone";
-import { Badge } from "@/components/ui/badge";
 
 type Patient = typeof patientsTable.$inferSelect;
 
