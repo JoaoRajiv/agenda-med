@@ -1,5 +1,7 @@
 import { relations } from "drizzle-orm";
 import {
+  boolean,
+  index,
   integer,
   pgEnum,
   pgTable,
@@ -7,8 +9,6 @@ import {
   time,
   timestamp,
   uuid,
-  index,
-  boolean,
 } from "drizzle-orm/pg-core";
 
 // ------------------- USUÁRIOS -------------------

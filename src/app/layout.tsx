@@ -1,6 +1,7 @@
+import "./globals.css";
+
 import type { Metadata } from "next";
 import { Geist_Mono, Inter, Nunito_Sans } from "next/font/google";
-import "./globals.css";
 import { Toaster } from "sonner";
 
 const inter = Inter({
@@ -29,7 +30,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${inter.variable} ${geistMono.variable} ${nunito.variable} antialiased`}
       >

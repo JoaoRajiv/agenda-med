@@ -4,7 +4,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
+
+import { authClient } from "@/lib/auth-client";
 
 import { Button } from "../../../components/ui/button";
 import {
@@ -19,8 +22,6 @@ import { FormControl, FormMessage } from "../../../components/ui/form";
 import { FormItem, FormLabel } from "../../../components/ui/form";
 import { Form, FormField } from "../../../components/ui/form";
 import { Input } from "../../../components/ui/input";
-import { authClient } from "@/lib/auth-client";
-import { toast } from "sonner";
 
 const loginSchema = z.object({
   email: z
