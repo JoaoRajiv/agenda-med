@@ -12,17 +12,23 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { doctorsTable } from "@/db/schema";
 import { Calendar, Clock, Clock1, ClockIcon, DollarSign } from "lucide-react";
+import UpsertDoctorForm from "./upsert-doctor-form";
+import { formatCurrencyInCents } from "../../../../_helpers/currency";
+import { getAvailability } from "../../_helpers/availability";
+import { useState } from "react";
 
 interface DoctorCardProps {
   doctor: typeof doctorsTable.$inferSelect;
 }
 
 const DoctorCard = ({ doctor }: DoctorCardProps) => {
+  const [isUpsertDialogOpen, setIsUpsertDialogOpen] = useState(false);
   const doctorInitials = doctor.name
     .split(" ")
     .map((n) => n[0])
     .join("")
     .toUpperCase();
+  const availability = getAvailability(doctor);
   return (
     <Card>
       <CardHeader>
@@ -37,28 +43,35 @@ const DoctorCard = ({ doctor }: DoctorCardProps) => {
         </div>
       </CardHeader>
       <Separator />
-      <CardContent className="flex flex-col gap-1">
+      <CardContent className="flex flex-col gap-2">
         <Badge variant="outline">
-          <Calendar />
-          {`Disponível de ${doctor.availableFromWeekday} às ${doctor.availableToWeekday}`}
+          <Calendar className="mr-1" />
+          {`${availability.from.format("dddd")} às ${availability.to.format("dddd")}`}
         </Badge>
         <Badge variant="outline">
-          <ClockIcon />
-          {`Disponível das ${doctor.availableFromTime} às ${doctor.availableToTime}`}
+          <ClockIcon className="mr-1" />
+          {`${availability.from.format("HH:mm")} às ${availability.to.format("HH:mm")}`}
         </Badge>
         <Badge variant="outline">
-          <DollarSign />
-          {`Valor da consulta: R$ ${doctor.appointmentPriceInCents / 100},00`}
+          <DollarSign className="mr-1" />
+          {formatCurrencyInCents(doctor.appointmentPriceInCents)}
         </Badge>
-        <Separator />
-        <CardFooter>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button className="text-sm">Ver Detalhes</Button>
-            </DialogTrigger>
-          </Dialog>
-        </CardFooter>
       </CardContent>
+      <Separator />
+      <CardFooter>
+        <Dialog open={isUpsertDialogOpen} onOpenChange={setIsUpsertDialogOpen}>
+          <DialogTrigger asChild>
+            <Button className="w-full text-sm">Ver Detalhes</Button>
+          </DialogTrigger>
+          <UpsertDoctorForm
+            doctor={{
+              ...doctor,
+              availableFromTime: availability.from.format("HH:mm:ss"),
+              availableToTime: availability.to.format("HH:mm:ss"),
+            }}
+          />
+        </Dialog>
+      </CardFooter>
     </Card>
   );
 };
