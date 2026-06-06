@@ -34,6 +34,19 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useEffect } from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Trash } from "lucide-react";
+import { deletePatient } from "@/actions/delete-patient";
 
 const formSchema = z.object({
   name: z.string().trim().min(1, {
@@ -87,6 +100,15 @@ const UpsertPatientForm = ({
     },
     onError: () => {
       toast.error("Erro ao salvar paciente.");
+    },
+  });
+  const deletePatientAction = useAction(deletePatient, {
+    onSuccess: () => {
+      toast.success("Paciente deletado com sucesso.");
+      onSuccess?.();
+    },
+    onError: () => {
+      toast.error("Erro ao deletar paciente.");
     },
   });
 
@@ -184,6 +206,37 @@ const UpsertPatientForm = ({
             />
           </div>
           <DialogFooter>
+            {patient && (
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="outline">
+                    <Trash />
+                    Excluir Paciente
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Tem certeza que deseja deletar esse paciente?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Essa ação não pode ser desfeita. Todas as consultas
+                      associadas a esse paciente também serão deletadas.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => {
+                        deletePatientAction.execute({ id: patient.id });
+                      }}
+                    >
+                      Excluir Paciente
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            )}
             <Button
               type="submit"
               disabled={upsertPatientAction.status === "executing"}
