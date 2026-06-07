@@ -1,5 +1,5 @@
 "use client";
-import { Calendar, Clock, Clock1, ClockIcon, DollarSign } from "lucide-react";
+import { Calendar, ClockIcon, DollarSign } from "lucide-react";
 import { useState } from "react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";

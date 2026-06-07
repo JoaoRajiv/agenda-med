@@ -85,7 +85,7 @@ export const doctorsTable = pgTable("doctors", {
   name: text("name").notNull(),
   avatarImageUrl: text("avatar_image_url"),
   specialty: text("specialty").notNull(),
-  appointmentPriceInCents: integer("appointment_price_in_cents").notNull(),
+  priceInCents: integer("appointment_price_in_cents").notNull(),
 
   // 0= Sunday, 1= Monday, 2= Tuesday, 3= Wednesday, 4= Thursday, 5= Friday, 6= Saturday
   availableFromWeekday: integer("available_from_weekday").notNull(), // 1= Monday
@@ -157,6 +157,7 @@ export const appointmentsTable = pgTable("appointments", {
   patientId: uuid("patient_id")
     .references(() => patientsTable.id, { onDelete: "cascade" })
     .notNull(),
+  appointmentPriceInCents: integer("appointment_price_in_cents").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
@@ -181,7 +182,7 @@ export const appointmentTableRelations = relations(
   }),
 );
 
-// ------------------- OUTRAS ENTIDADES -------------------
+// ---------------- OUTRAS ENTIDADES -------------------
 export const user = pgTable("users", {
   id: text("id").primaryKey(),
 });

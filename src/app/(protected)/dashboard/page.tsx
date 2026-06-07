@@ -1,6 +1,5 @@
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
-import Image from "next/image";
 import { redirect } from "next/navigation";
 
 import { db } from "@/db";

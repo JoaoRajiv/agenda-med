@@ -11,13 +11,15 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
+// Extrai as configurações do Tailwind para evitar aninhamento profundo
+const tailwindConfig = tailwindCanonicalClasses.configs["flat/recommended"];
+const tailwindArray = Array.isArray(tailwindConfig)
+  ? tailwindConfig
+  : [tailwindConfig];
+
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
-
-  // Isso pode retornar um objeto ou um array.
-  // Não tem problema, o .flat() no final vai cuidar disso.
-  tailwindCanonicalClasses.configs["flat/recommended"],
-
+  ...tailwindArray,
   {
     plugins: {
       "simple-import-sort": simpleImportSort,
@@ -25,10 +27,10 @@ const eslintConfig = [
     rules: {
       "simple-import-sort/exports": "warn",
       "simple-import-sort/imports": "warn",
+      "@typescript-eslint/no-unused-vars": "warn",
+      "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
     },
   },
 ];
 
-// O .flat(Infinity) transforma qualquer array aninhado num array perfeitamente plano.
-// O .filter(Boolean) remove configurações nulas ou undefined para evitar erros internos do ESLint.
-export default eslintConfig.flat(Infinity).filter(Boolean);
+export default eslintConfig;

@@ -1,12 +1,14 @@
 import "./globals.css";
 
 import type { Metadata } from "next";
-import { Geist_Mono, Inter, Nunito_Sans } from "next/font/google";
+import { Geist_Mono, Nunito_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import { Toaster } from "sonner";
 
-const inter = Inter({
-  variable: "--font-inter-sans",
-  subsets: ["latin"],
+const googleFlex = localFont({
+  src: "./_fonts/GoogleSansFlex-VariableFont_GRAD,ROND,opsz,slnt,wdth,wght.ttf",
+  display: "swap",
+  variable: "--font-google-flex",
 });
 
 const nunito = Nunito_Sans({
@@ -32,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${geistMono.variable} ${nunito.variable} antialiased`}
+        className={`${googleFlex.variable} ${geistMono.variable} ${nunito.variable} antialiased`}
       >
         {children}
         <Toaster position="top-right" theme="light" />
