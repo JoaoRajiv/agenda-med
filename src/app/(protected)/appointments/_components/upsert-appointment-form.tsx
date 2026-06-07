@@ -130,6 +130,21 @@ const AddAppointmentForm = ({
     }
   }, [isOpen, form]);
 
+  const isDateAvailable = (date: Date) => {
+    if (!selectedDoctorId) return false;
+    const selectedDoctor = doctors.find(
+      (doctor) => doctor.id === selectedDoctorId,
+    );
+    if (!selectedDoctor) return false;
+    const dayOfWeek = date.getDay();
+    return (
+      dayOfWeek >= selectedDoctor?.availableFromWeekday &&
+      dayOfWeek <= selectedDoctor?.availableToWeekday
+    );
+  };
+
+  const isDateTimeEnabled = selectedPatientId && selectedDoctorId;
+
   const createAppointmentAction = useAction(createAppointment, {
     onSuccess: () => {
       toast.success("Agendamento criado com sucesso.");
@@ -146,21 +161,6 @@ const AddAppointmentForm = ({
       appointmentPriceInCents: values.appointmentPrice * 100,
     });
   };
-
-  const isDateAvailable = (date: Date) => {
-    if (!selectedDoctorId) return false;
-    const selectedDoctor = doctors.find(
-      (doctor) => doctor.id === selectedDoctorId,
-    );
-    if (!selectedDoctor) return false;
-    const dayOfWeek = date.getDay();
-    return (
-      dayOfWeek >= selectedDoctor?.availableFromWeekday &&
-      dayOfWeek <= selectedDoctor?.availableToWeekday
-    );
-  };
-
-  const isDateTimeEnabled = selectedPatientId && selectedDoctorId;
 
   return (
     <DialogContent className="sm:max-w-125">
@@ -318,7 +318,7 @@ const AddAppointmentForm = ({
                         value={time.value}
                         disabled={!time.available}
                       >
-                        {time.value} {!time.available && "(Indisponível)"}
+                        {time.label} {!time.available && "(Indisponível)"}
                       </SelectItem>
                     ))}
                   </SelectContent>

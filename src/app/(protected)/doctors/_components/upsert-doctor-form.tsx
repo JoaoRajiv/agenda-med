@@ -97,9 +97,7 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
     defaultValues: {
       name: doctor?.name ?? "",
       specialty: doctor?.specialty ?? "",
-      appointmentPrice: doctor?.appointmentPriceInCents
-        ? doctor.appointmentPriceInCents / 100
-        : 0,
+      appointmentPrice: doctor?.priceInCents ? doctor.priceInCents / 100 : 0,
       availableFromWeekday: doctor?.availableFromWeekday?.toString() ?? "1",
       availableToWeekday: doctor?.availableToWeekday?.toString() ?? "5",
       availableFromTime: doctor?.availableFromTime ?? "",
@@ -131,7 +129,7 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
       id: doctor?.id,
       availableFromWeekday: parseInt(values.availableFromWeekday),
       availableToWeekday: parseInt(values.availableToWeekday),
-      appointmentPriceInCents: values.appointmentPrice * 100,
+      priceInCents: values.appointmentPrice * 100,
     });
   };
 

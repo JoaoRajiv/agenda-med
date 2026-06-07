@@ -48,7 +48,7 @@ const DoctorCard = ({ doctor }: DoctorCardProps) => {
       <CardContent className="flex flex-col gap-2">
         <Badge variant="outline">
           <Calendar className="mr-1" />
-          {`${availability.from.format("dddd")} às ${availability.to.format("dddd")}`}
+          {`${availability.from.format("ddd")} a ${availability.to.format("ddd")}`}
         </Badge>
         <Badge variant="outline">
           <ClockIcon className="mr-1" />

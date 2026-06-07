@@ -76,10 +76,7 @@ export const getAvailableTimes = actionClient
           .utc()
           .set("hour", Number(timeSlot.split(":")[0]))
           .set("minute", Number(timeSlot.split(":")[1]))
-          .set("second", 0)
-          .local();
-        console.log(timeSlotTime.format("HH:mm:ss"));
-        console.log(doctorAvailableFrom.format("HH:mm:ss"));
+          .set("second", 0);
         return (
           timeSlotTime.format("HH:mm:ss") >=
             doctorAvailableFrom.format("HH:mm:ss") &&
@@ -92,6 +89,7 @@ export const getAvailableTimes = actionClient
       return {
         value: timeSlot,
         available: !appointmentOnSelectedDate.includes(timeSlot),
+        label: timeSlot.substring(0, 5), // "08:00"
       };
     });
   });
