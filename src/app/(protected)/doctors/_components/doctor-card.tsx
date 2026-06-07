@@ -15,7 +15,7 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { doctorsTable } from "@/db/schema";
 
-import { formatCurrencyInCents } from "../../../../_helpers/currency";
+import { formatCurrencyInCents } from "../../../../helpers/currency";
 import { getAvailability } from "../../_helpers/availability";
 import UpsertDoctorForm from "./upsert-doctor-form";
 
@@ -56,7 +56,7 @@ const DoctorCard = ({ doctor }: DoctorCardProps) => {
         </Badge>
         <Badge variant="outline">
           <DollarSign className="mr-1" />
-          {formatCurrencyInCents(doctor.appointmentPriceInCents)}
+          {formatCurrencyInCents(doctor.priceInCents)}
         </Badge>
       </CardContent>
       <Separator />

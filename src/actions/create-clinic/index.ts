@@ -11,9 +11,7 @@ export const createClinic = async (name: string) => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
-  if (!session?.user) {
-    throw new Error("Unauthorized");
-  }
+  if (!session?.user?.id) throw new Error("Não autorizado");
   const [clinic] = await db
     .insert(clinicsTable)
     .values({

@@ -2,7 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 
-import { formatPhoneNumber } from "@/_helpers/format-number-phone";
+import { formatPhoneNumber } from "@/helpers/format-number-phone";
 import { Badge } from "@/components/ui/badge";
 import { patientsTable } from "@/db/schema";
 

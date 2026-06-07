@@ -1,3 +1,4 @@
+import { ReactQueryProvider } from "@/providers/react-query";
 import "./globals.css";
 
 import type { Metadata } from "next";
@@ -36,7 +37,7 @@ export default function RootLayout({
       <body
         className={`${googleFlex.variable} ${geistMono.variable} ${nunito.variable} antialiased`}
       >
-        {children}
+        <ReactQueryProvider>{children}</ReactQueryProvider>
         <Toaster position="top-right" theme="light" />
       </body>
     </html>
