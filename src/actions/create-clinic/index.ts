@@ -8,19 +8,19 @@ import { clinicsTable, usersToClinicTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
 export const createClinic = async (name: string) => {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-  if (!session?.user?.id) throw new Error("Não autorizado");
-  const [clinic] = await db
-    .insert(clinicsTable)
-    .values({
-      name,
-    })
-    .returning();
-  await db.insert(usersToClinicTable).values({
-    clinicId: clinic.id,
-    userId: session?.user.id!,
-  });
-  redirect(`/dashboard`);
+	const session = await auth.api.getSession({
+		headers: await headers(),
+	});
+	if (!session?.user?.id) throw new Error("Não autorizado");
+	const [clinic] = await db
+		.insert(clinicsTable)
+		.values({
+			name,
+		})
+		.returning();
+	await db.insert(usersToClinicTable).values({
+		clinicId: clinic.id,
+		userId: session?.user.id,
+	});
+	redirect(`/dashboard`);
 };

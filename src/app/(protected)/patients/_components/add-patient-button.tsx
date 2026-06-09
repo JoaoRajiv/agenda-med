@@ -9,19 +9,19 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import UpsertPatientForm from "./upsert-patient-form";
 
 const AddPatientButton = () => {
-  const [isOpen, setIsOpen] = useState(false);
+	const [isOpen, setIsOpen] = useState(false);
 
-  return (
-    <Dialog open={isOpen} onOpenChange={(open) => setIsOpen(open)}>
-      <DialogTrigger asChild>
-        <Button size="sm">
-          <Plus />
-          Adicionar Paciente
-        </Button>
-      </DialogTrigger>
-      <UpsertPatientForm onSuccess={() => setIsOpen(false)} />
-    </Dialog>
-  );
+	return (
+		<Dialog open={isOpen} onOpenChange={(open) => setIsOpen(open)}>
+			<DialogTrigger asChild>
+				<Button size="sm">
+					<Plus />
+					Adicionar Paciente
+				</Button>
+			</DialogTrigger>
+			<UpsertPatientForm onSuccess={() => setIsOpen(false)} />
+		</Dialog>
+	);
 };
 
 export default AddPatientButton;
