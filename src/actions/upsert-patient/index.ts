@@ -45,6 +45,7 @@ export const upsertPatient = actionClient
 		});
 
 		revalidatePath("/patients");
+		revalidatePath("/dashboard");
 
 		return {
 			message: "Paciente criado com sucesso.",

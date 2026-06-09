@@ -33,4 +33,5 @@ export const deleteDoctor = actionClient
 		}
 		await db.delete(doctorsTable).where(eq(doctorsTable.id, parsedInput.id));
 		revalidatePath("/doctors");
+		revalidatePath("/dashboard");
 	});

@@ -34,6 +34,7 @@ export const deletePatient = actionClient
 		await db.delete(patientsTable).where(eq(patientsTable.id, parsedInput.id));
 
 		revalidatePath("/patients");
+		revalidatePath("/dashboard");
 
 		return {
 			message: "Paciente excluído com sucesso.",

@@ -2,23 +2,12 @@ import { ReactQueryProvider } from "@/providers/react-query";
 import "./globals.css";
 
 import type { Metadata } from "next";
-import { Geist_Mono, Nunito_Sans } from "next/font/google";
-import localFont from "next/font/local";
+import { Manrope } from "next/font/google";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Toaster } from "sonner";
 
-const googleFlex = localFont({
-	src: "./_fonts/GoogleSansFlex-VariableFont_GRAD,ROND,opsz,slnt,wdth,wght.ttf",
-	display: "swap",
-	variable: "--font-google-flex",
-});
-
-const nunito = Nunito_Sans({
-	variable: "--font-nunito",
-	subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-	variable: "--font-geist-mono",
+const manrope = Manrope({
+	variable: "--font-manrope-sans",
 	subsets: ["latin"],
 });
 
@@ -34,10 +23,10 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en" suppressHydrationWarning>
-			<body
-				className={`${googleFlex.variable} ${geistMono.variable} ${nunito.variable} antialiased`}
-			>
-				<ReactQueryProvider>{children}</ReactQueryProvider>
+			<body className={`${manrope.variable} font-sans antialiased`}>
+				<ReactQueryProvider>
+					<NuqsAdapter>{children}</NuqsAdapter>
+				</ReactQueryProvider>
 				<Toaster position="top-right" theme="light" />
 			</body>
 		</html>
