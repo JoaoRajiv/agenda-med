@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import { and, count, eq, gte, lte, sum } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { Card } from "@/components/ui/card";
 import {
 	PageActions,
 	PageContainer,
@@ -19,6 +20,7 @@ import {
 	usersToClinicTable,
 } from "@/db/schema";
 import { auth } from "@/lib/auth";
+import AppointmentsChart from "./_components/appointment-chart";
 import { DatePicker } from "./_components/date-picker";
 import StatsCards from "./_components/stats-card";
 
@@ -85,6 +87,9 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
 				.from(doctorsTable)
 				.where(eq(doctorsTable.clinicId, session.user.clinic.id)),
 		]);
+
+	const chartStartDate = dayjs().subtract(10, "days").startOf("day");
+	const chartEndDate = dayjs(toDate).add(10, "days").endOf("day");
 	return (
 		<PageContainer>
 			<PageHeader>
@@ -103,6 +108,10 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
 					totalPatients={totalPatients?.total ?? 0}
 					totalDoctors={totalDoctors?.total ?? 0}
 				/>
+				<div className="grid grid-cols-[2.25fr_1fr] gap-4 mt-4">
+					<AppointmentsChart dailyAppointmentsData={[]} />
+					<Card></Card>
+				</div>
 			</PageContent>
 		</PageContainer>
 	);
