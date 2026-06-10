@@ -28,7 +28,7 @@ export function TopDoctors({ topDoctors }: TopDoctorsProps) {
 			<CardHeader className="flex items-center justify-between ">
 				<CardTitle className="flex items-center gap-2">
 					<Heart className="w-5 h-5 text-gray-400" />
-					<h2 className="text-xl font-semibold text-gray-900">Médicos</h2>
+					<h2 className="text-md font-bold text-gray-900">Médicos</h2>
 				</CardTitle>
 				<CardAction>
 					<Link
