@@ -13,17 +13,19 @@ import {
 
 // ------------------- USUÁRIOS -------------------
 
+export const userPlanEnum = pgEnum("user_plan", ["free", "essential", "pro"]);
+
 export const usersTable = pgTable("users", {
 	id: text("id").primaryKey(),
 	name: text("name").notNull(),
 	email: text("email").notNull().unique(),
-	emailVerified: boolean("email_verified").default(false).notNull(),
+	emailVerified: boolean("email_verified").notNull(),
 	image: text("image"),
-	createdAt: timestamp("created_at").defaultNow().notNull(),
-	updatedAt: timestamp("updated_at")
-		.defaultNow()
-		.$onUpdate(() => /* @__PURE__ */ new Date())
-		.notNull(),
+	stripeCustomerId: text("stripe_customer_id"),
+	stripeSubscriptionId: text("stripe_subscription_id"),
+	plan: text("plan"),
+	createdAt: timestamp("created_at").notNull(),
+	updatedAt: timestamp("updated_at").notNull(),
 });
 
 export const userTableRelations = relations(usersTable, ({ many }) => ({
