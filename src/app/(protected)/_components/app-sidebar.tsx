@@ -2,6 +2,7 @@
 
 import {
 	CalendarDays,
+	Gem,
 	LayoutDashboard,
 	LogOut,
 	Stethoscope,
@@ -84,12 +85,36 @@ export function AppSidebar() {
 								<SidebarMenuItem key={item.title}>
 									<SidebarMenuButton asChild isActive={pathname === item.url}>
 										<Link href={item.url}>
-											<item.icon />
-											<span>{item.title}</span>
+											<item.icon
+												className={`${pathname === item.url ? "text-primary" : "text-muted-foreground"} font-medium`}
+											/>
+											<span
+												className={`${pathname === item.url ? "text-primary" : "text-muted-foreground"} font-medium`}
+											>
+												{item.title}
+											</span>
 										</Link>
 									</SidebarMenuButton>
 								</SidebarMenuItem>
 							))}
+						</SidebarMenu>
+					</SidebarGroupContent>
+				</SidebarGroup>
+				<SidebarGroup>
+					<SidebarGroupLabel>Outros</SidebarGroupLabel>
+					<SidebarGroupContent>
+						<SidebarMenu>
+							<SidebarMenuItem>
+								<SidebarMenuButton
+									asChild
+									isActive={pathname === "/subscription"}
+								>
+									<Link href="/subscription">
+										<Gem />
+										<span className="font-medium">Assinatura</span>
+									</Link>
+								</SidebarMenuButton>
+							</SidebarMenuItem>
 						</SidebarMenu>
 					</SidebarGroupContent>
 				</SidebarGroup>

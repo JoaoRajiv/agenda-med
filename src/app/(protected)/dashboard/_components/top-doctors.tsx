@@ -10,11 +10,11 @@ import {
 } from "@/components/ui/card";
 
 interface Doctor {
-	doctorId: string;
+	id: string;
 	name: string;
 	avatarImageUrl: string | null;
 	specialty: string;
-	totalAppointments: number;
+	appointments: number;
 }
 
 interface TopDoctorsProps {
@@ -43,10 +43,7 @@ export function TopDoctors({ topDoctors }: TopDoctorsProps) {
 			{/* Doctors List */}
 			<CardContent className="space-y-4">
 				{topDoctors.map((doctor) => (
-					<div
-						key={doctor.doctorId}
-						className="flex items-center justify-between"
-					>
+					<div key={doctor.id} className="flex items-center justify-between">
 						<div className="flex items-center gap-2">
 							{/* Avatar */}
 							<div className="relative w-12 h-12 rounded-full overflow-hidden bg-gray-200 shrink-0">
@@ -76,9 +73,7 @@ export function TopDoctors({ topDoctors }: TopDoctorsProps) {
 						{/* Appointments Count */}
 						<div className="text-right">
 							<p className="text-sm text-gray-600">
-								<span className="font-semibold">
-									{doctor.totalAppointments}
-								</span>
+								<span className="font-semibold">{doctor.appointments}</span>
 								<span className="text-gray-400"> agend.</span>
 							</p>
 						</div>

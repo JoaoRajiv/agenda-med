@@ -4,7 +4,7 @@ import { Progress } from "@/components/ui/progress";
 
 interface Doctor {
 	specialty: string;
-	totalAppointments: number;
+	appointments: number;
 }
 
 interface TopSpecialtiesProps {
@@ -13,7 +13,7 @@ interface TopSpecialtiesProps {
 
 export function TopSpecialties({ topSpecialties }: TopSpecialtiesProps) {
 	const maxAppointments =
-		Math.max(...topSpecialties.map((s) => s.totalAppointments), 0) || 1;
+		Math.max(...topSpecialties.map((s) => s.appointments), 0) || 1;
 	return (
 		<Card className="bg-white rounded-lg">
 			{/* Header */}
@@ -28,7 +28,7 @@ export function TopSpecialties({ topSpecialties }: TopSpecialtiesProps) {
 			<CardContent className="space-y-4">
 				{topSpecialties.map((specialty) => {
 					const progressValue =
-						(specialty.totalAppointments / maxAppointments) * 100; // Assuming 100 is the max for progress bar
+						(specialty.appointments / maxAppointments) * 100; // Assuming 100 is the max for progress bar
 					return (
 						<div
 							key={specialty.specialty}
@@ -57,7 +57,7 @@ export function TopSpecialties({ topSpecialties }: TopSpecialtiesProps) {
 							<div className="text-right">
 								<p className="text-sm text-gray-600">
 									<span className="font-semibold">
-										{specialty.totalAppointments}
+										{specialty.appointments}
 									</span>
 									<span className="text-gray-400"> agend.</span>
 								</p>

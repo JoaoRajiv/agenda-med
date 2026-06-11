@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { and, count, desc, eq, gte, lte, sum } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { Calendar } from "lucide-react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -14,13 +14,9 @@ import {
 	PageHeaderContent,
 	PageTitle,
 } from "@/components/ui/page-container";
+import { getDashboard } from "@/data/get-dashboard";
 import { db } from "@/db";
-import {
-	appointmentsTable,
-	doctorsTable,
-	patientsTable,
-	usersToClinicTable,
-} from "@/db/schema";
+import { usersToClinicTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { appointmentsTableColumns } from "../appointments/_components/table-columns";
 import AppointmentsChart from "./_components/appointment-chart";
@@ -37,7 +33,6 @@ interface DashboardPageProps {
 }
 
 const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
-	const { from, to } = await searchParams;
 	const session = await auth.api.getSession({ headers: await headers() });
 	if (!session?.user) {
 		redirect("/authentication");
@@ -52,8 +47,7 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
 		redirect("/clinic-form");
 	}
 
-	const fromDate = new Date(from);
-	const toDate = new Date(to);
+	const { from, to } = await searchParams;
 
 	if (!from || !to) {
 		redirect(
@@ -61,94 +55,26 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
 		);
 	}
 
-	const [
-		[totalRevenue],
-		[totalAppointments],
-		[totalPatients],
-		[totalDoctors],
+	const {
+		totalRevenue,
+		totalAppointments,
+		totalPatients,
+		totalDoctors,
 		topDoctors,
-		appointmentsBySpecialty,
+		topSpecialties,
 		todayAppointments,
-	] = await Promise.all([
-		db
-			.select({ total: sum(appointmentsTable.appointmentPriceInCents) })
-			.from(appointmentsTable)
-			.where(
-				and(
-					eq(appointmentsTable.clinicId, session.user.clinic.id),
-					gte(appointmentsTable.date, fromDate),
-					lte(appointmentsTable.date, toDate),
-				),
-			),
-		db
-			.select({ total: count() })
-			.from(appointmentsTable)
-			.where(
-				and(
-					eq(appointmentsTable.clinicId, session.user.clinic.id),
-					gte(appointmentsTable.date, fromDate),
-					lte(appointmentsTable.date, toDate),
-				),
-			),
-		db
-			.select({ total: count() })
-			.from(patientsTable)
-			.where(eq(patientsTable.clinicId, session.user.clinic.id)),
-		db
-			.select({ total: count() })
-			.from(doctorsTable)
-			.where(and(eq(doctorsTable.clinicId, session.user.clinic.id))),
-		db
-			.select({
-				doctorId: doctorsTable.id,
-				name: doctorsTable.name,
-				avatarImageUrl: doctorsTable.avatarImageUrl,
-				specialty: doctorsTable.specialty,
-				totalAppointments: count(),
-			})
-			.from(doctorsTable)
-			.leftJoin(
-				appointmentsTable,
-				eq(doctorsTable.id, appointmentsTable.doctorId),
-			)
-			.where(
-				and(
-					eq(appointmentsTable.clinicId, session.user.clinic.id),
-					gte(appointmentsTable.date, fromDate),
-					lte(appointmentsTable.date, toDate),
-				),
-			)
-			.groupBy(doctorsTable.id)
-			.orderBy((t) => desc(t.totalAppointments))
-			.limit(5),
-		db
-			.select({
-				specialty: doctorsTable.specialty,
-				totalAppointments: count(),
-			})
-			.from(appointmentsTable)
-			.innerJoin(doctorsTable, eq(appointmentsTable.doctorId, doctorsTable.id))
-			.where(
-				and(
-					eq(appointmentsTable.clinicId, session.user.clinic.id),
-					gte(appointmentsTable.date, fromDate),
-					lte(appointmentsTable.date, toDate),
-				),
-			)
-			.groupBy(doctorsTable.specialty)
-			.orderBy(desc(count(appointmentsTable.id))),
-		db.query.appointmentsTable.findMany({
-			where: and(
-				eq(appointmentsTable.clinicId, session.user.clinic.id),
-				gte(appointmentsTable.date, dayjs().startOf("day").toDate()),
-				lte(appointmentsTable.date, dayjs().endOf("day").toDate()),
-			),
-			with: {
-				patient: true,
-				doctor: true,
+		dailyAppointmentsData,
+	} = await getDashboard({
+		from,
+		to,
+		session: {
+			user: {
+				clinic: {
+					id: session.user.clinic.id,
+				},
 			},
-		}),
-	]);
+		},
+	});
 
 	return (
 		<PageContainer>
@@ -169,10 +95,10 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
 					totalDoctors={totalDoctors?.total ?? 0}
 				/>
 				<div className="grid grid-cols-[2.25fr_1fr] gap-4 mt-4">
-					<AppointmentsChart dailyAppointmentsData={[]} />
+					<AppointmentsChart dailyAppointmentsData={dailyAppointmentsData} />
 					<TopDoctors topDoctors={topDoctors} />
 				</div>
-				<div className="grid grid-cols-[2.25fr_1fr] gap-4 mt-4">
+				<div className="grid grid-cols-[2.25fr_1fr] max-h-50 gap-4 mt-4">
 					<Card>
 						<CardHeader>
 							<div className="flex items-center gap-2">
@@ -189,7 +115,7 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
 							/>
 						</CardContent>
 					</Card>
-					<TopSpecialties topSpecialties={appointmentsBySpecialty} />
+					<TopSpecialties topSpecialties={topSpecialties} />
 				</div>
 			</PageContent>
 		</PageContainer>
