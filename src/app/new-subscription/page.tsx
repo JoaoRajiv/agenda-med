@@ -1,6 +1,5 @@
 import { headers } from "next/headers";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { SubscriptionPlan } from "@/app/(protected)/subscription/_components/subscription-plan";
 import {
 	PageContainer,
 	PageContent,
@@ -10,36 +9,11 @@ import {
 	PageTitle,
 } from "@/components/ui/page-container";
 import { auth } from "@/lib/auth";
-import { SubscriptionPlan } from "./_components/subscription-plan";
 
 const SubscriptionPage = async () => {
 	const session = await auth.api.getSession({ headers: await headers() });
 	const plan = session?.user?.plan;
 
-	if (!session) {
-		return (
-			<PageContainer>
-				<PageHeader>
-					<PageHeaderContent>
-						<PageTitle>Assinatura</PageTitle>
-						<PageDescription>
-							Faça login para gerenciar sua assinatura
-						</PageDescription>
-					</PageHeaderContent>
-				</PageHeader>
-				<PageContent>
-					<p className="text-center text-gray-500">
-						Faça login para acessar esta página.
-					</p>
-					<Button>
-						<Link href="/login" className="w-full h-full">
-							Fazer Login
-						</Link>
-					</Button>
-				</PageContent>
-			</PageContainer>
-		);
-	}
 	return (
 		<PageContainer>
 			<PageHeader>
