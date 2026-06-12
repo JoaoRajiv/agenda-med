@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { eq } from "drizzle-orm";
 import { Calendar } from "lucide-react";
 import { headers } from "next/headers";
@@ -24,6 +25,8 @@ import { DatePicker } from "./_components/date-picker";
 import StatsCards from "./_components/stats-card";
 import { TopDoctors } from "./_components/top-doctors";
 import { TopSpecialties } from "./_components/top-specialties";
+
+dayjs.extend(utc);
 
 interface DashboardPageProps {
 	searchParams: Promise<{
@@ -54,8 +57,9 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
 	const { from, to } = await searchParams;
 
 	if (!from || !to) {
+		const now = dayjs().utc().local();
 		redirect(
-			`/dashboard?from=${dayjs().subtract(30, "day").format("YYYY-MM-DD")}&to=${dayjs().format("YYYY-MM-DD")}`,
+			`/dashboard?from=${now.startOf("month").format("YYYY-MM-DD")}&to=${now.format("YYYY-MM-DD")}`,
 		);
 	}
 

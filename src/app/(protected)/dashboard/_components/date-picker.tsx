@@ -81,7 +81,7 @@ export function DatePicker({
 						defaultMonth={date?.from}
 						selected={date}
 						onSelect={handleDateSelect}
-						numberOfMonths={2}
+						numberOfMonths={1}
 						locale={ptBR}
 					/>
 				</PopoverContent>

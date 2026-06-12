@@ -32,6 +32,7 @@ import {
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { authClient } from "@/lib/auth-client";
+import { PlanBadge } from "./plan-badge";
 
 const items = [
 	{
@@ -72,9 +73,14 @@ export function AppSidebar() {
 	};
 	return (
 		<Sidebar>
-			<SidebarHeader className="flex flex-row border-b p-4">
-				<Image src="/logo.svg" alt="Doutor Agenda" width={28} height={28} />
-				<span className="font-nunito text-lg font-bold">agenda.med</span>
+			<SidebarHeader className="flex flex-row items-center border-b p-4 justify-center">
+				<div className="flex items-center gap-1">
+					<Image src="/logo.svg" alt="Doutor Agenda" width={28} height={28} />
+					<span className="font-nunito text-md font-bold">agenda.med</span>
+				</div>
+				{session.data?.user?.plan && (
+					<PlanBadge plan={session.data.user.plan} size="sm" />
+				)}
 			</SidebarHeader>
 			<SidebarContent>
 				<SidebarGroup>

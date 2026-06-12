@@ -63,8 +63,6 @@ export const POST = async (request: Request) => {
 				break;
 			}
 
-			console.log(`Buscando assinatura: ${subscriptionId}`);
-
 			// Busca a assinatura oficial no Stripe para pegar o userId dos metadados com segurança
 			const subscription = await stripe.subscriptions.retrieve(subscriptionId);
 			const userId = subscription.metadata.userId;
