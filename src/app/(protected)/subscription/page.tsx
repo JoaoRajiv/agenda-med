@@ -1,3 +1,6 @@
+import { headers } from "next/headers";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import {
 	PageActions,
 	PageContainer,
@@ -7,10 +10,38 @@ import {
 	PageHeaderContent,
 	PageTitle,
 } from "@/components/ui/page-container";
+import { auth } from "@/lib/auth";
 import AddDoctorButton from "../doctors/_components/add-doctor-button";
 import { SubscriptionPlan } from "./_components/subscription-plan";
 
-const SubscriptionPage = () => {
+const SubscriptionPage = async () => {
+	const session = await auth.api.getSession({ headers: await headers() });
+	const plan = session?.user?.plan;
+
+	if (!session) {
+		return (
+			<PageContainer>
+				<PageHeader>
+					<PageHeaderContent>
+						<PageTitle>Assinatura</PageTitle>
+						<PageDescription>
+							Faça login para gerenciar sua assinatura
+						</PageDescription>
+					</PageHeaderContent>
+				</PageHeader>
+				<PageContent>
+					<p className="text-center text-gray-500">
+						Faça login para acessar esta página.
+					</p>
+					<Button>
+						<Link href="/login" className="w-full h-full">
+							Fazer Login
+						</Link>
+					</Button>
+				</PageContent>
+			</PageContainer>
+		);
+	}
 	return (
 		<PageContainer>
 			<PageHeader>
@@ -26,13 +57,14 @@ const SubscriptionPage = () => {
 				<div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
 					<SubscriptionPlan
 						description="Ideal para clínicas que estão começando e querem testar a plataforma."
-						active={true}
+						active={plan === "free"}
 						features={["Acesso a funcionalidades básicas", "Suporte por email"]}
 						planName="Plano Basic"
 						price={0}
 					/>
 					<SubscriptionPlan
 						description="Perfeito para clínicas de pequeno porte que precisam de mais funcionalidades e suporte dedicado."
+						active={plan === "essential"}
 						features={[
 							"Acesso a todas as funcionalidades",
 							"Suporte prioritário por email e chat",
@@ -43,6 +75,7 @@ const SubscriptionPage = () => {
 					/>
 					<SubscriptionPlan
 						description="Perfeito para clínicas de médio porte que precisam de mais funcionalidades e suporte dedicado."
+						active={plan === "pro"}
 						features={[
 							"Tudo do Plano Essential",
 							"Integração com sistemas de terceiros",

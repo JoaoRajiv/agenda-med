@@ -103,7 +103,7 @@ export const POST = async (request: Request) => {
 				.set({
 					stripeSubscriptionId: null,
 					stripeCustomerId: null,
-					plan: null,
+					plan: "free",
 				})
 				.where(eq(usersTable.id, userId));
 			console.log("User updated:", userId);

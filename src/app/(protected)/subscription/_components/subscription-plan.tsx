@@ -2,8 +2,11 @@
 
 import { loadStripe } from "@stripe/stripe-js";
 import { Check, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
+import { toast } from "sonner";
 import { createStripeCheckout } from "@/actions/create-stripe-checkout";
+import { openCustomerPortalAction } from "@/actions/stripe-portal";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,6 +25,7 @@ interface SubscriptionPlanProps {
 	currency?: string;
 	billingPeriod?: string;
 	features: string[];
+	userEmail?: string;
 	onSubscribe?: () => void;
 }
 
@@ -34,6 +38,8 @@ export function SubscriptionPlan({
 	billingPeriod = "mês",
 	features,
 }: SubscriptionPlanProps) {
+	const router = useRouter();
+
 	const createStripeCheckoutAction = useAction(createStripeCheckout, {
 		onSuccess: async ({ data }) => {
 			if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
@@ -50,6 +56,20 @@ export function SubscriptionPlan({
 				throw new Error("Stripe session ID not found.");
 			}
 			await stripe.redirectToCheckout({ sessionId: data?.sessionId });
+		},
+	});
+
+	const { execute } = useAction(openCustomerPortalAction, {
+		// Callbacks do next-safe-action
+		onSuccess: ({ data }) => {
+			if (data?.url) {
+				// Redireciona o usuário para o portal assim que a URL chegar
+				router.push(data.url);
+			}
+		},
+		onError: ({ error }) => {
+			// Captura a exceção disparada no servidor
+			toast.error(`Erro ao abrir o portal de assinatura: ${error}`);
 		},
 	});
 
@@ -114,16 +134,17 @@ export function SubscriptionPlan({
 			<CardContent className="pt-0">
 				{active ? (
 					<Button
-						disabled
-						className="w-full bg-neutral-100 text-neutral-600 hover:bg-neutral-100 cursor-not-allowed"
+						variant={"outline"}
+						className="w-full"
 						aria-label="Plano atual ativo"
+						onClick={() => execute()}
 					>
-						Plano Ativo
+						Gerenciar Plano
 					</Button>
 				) : (
 					<Button
 						onClick={handleSubscribe}
-						className="w-full bg-primary text-white hover:bg-neutral-800 transition-colors"
+						className="w-full bg-primary text-white  transition-colors"
 						disabled={createStripeCheckoutAction.isExecuting}
 						aria-label={`Inscrever-se no plano ${planName}`}
 					>
@@ -132,10 +153,8 @@ export function SubscriptionPlan({
 								className="animate-spin h-5 w-5 text-white"
 								aria-hidden="true"
 							/>
-						) : active ? (
-							"Plano Ativo"
 						) : (
-							"Assinar"
+							`Assinar`
 						)}
 					</Button>
 				)}

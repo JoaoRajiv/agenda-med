@@ -2,7 +2,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { customSession } from "better-auth/plugins";
 import { eq } from "drizzle-orm";
-
+import { usersTable, usersToClinicTable } from "@/db/schema";
 import { db } from "../db";
 import * as schema from "../db/schema";
 
@@ -21,17 +21,24 @@ export const auth = betterAuth({
 	plugins: [
 		customSession(async ({ user, session }) => {
 			// Fetch the clinics associated with the user and include them in the session
-			const clinics = await db.query.usersToClinicTable.findMany({
-				where: eq(schema.usersToClinicTable.userId, user.id),
-				with: {
-					clinic: true,
-				},
-			});
+			const [userData, clinics] = await Promise.all([
+				db.query.usersTable.findFirst({
+					where: eq(usersTable.id, user.id),
+				}),
+				db.query.usersToClinicTable.findMany({
+					where: eq(usersToClinicTable.userId, user.id),
+					with: {
+						clinic: true,
+						user: true,
+					},
+				}),
+			]);
 			// Alterar a quantidade quando for usar várias clínicas por usuário
 			const clinic = clinics?.[0];
 			return {
 				user: {
 					...user,
+					plan: userData?.plan,
 					clinic: clinic?.clinicId
 						? {
 								id: clinic?.clinic?.id,
