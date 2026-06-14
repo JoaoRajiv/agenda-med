@@ -6,20 +6,20 @@ import Stripe from "stripe";
 import { db } from "@/db";
 import { usersTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
-// Importe o seu cliente do next-safe-action (ajuste o caminho se necessário)
 import { actionClient } from "@/lib/next-safe-action";
 
-const key = process.env.STRIPE_SECRET_KEY;
-if (!key) {
-	throw new Error("Stripe secret key not found");
-}
-
-const stripe = new Stripe(key, {
-	apiVersion: "2025-05-28.basil",
-});
-
-// Definindo a ação de forma segura
 export const openCustomerPortalAction = actionClient.action(async () => {
+	// 1. Movemos a validação para DENTRO da execução da action
+	const key = process.env.STRIPE_SECRET_KEY;
+	if (!key) {
+		throw new Error("Stripe secret key not found");
+	}
+
+	// 2. Inicializamos o Stripe apenas quando a action for chamada
+	const stripe = new Stripe(key, {
+		apiVersion: "2025-05-28.basil",
+	});
+
 	const session = await auth.api.getSession({ headers: await headers() });
 
 	if (!session?.user?.id) {
@@ -40,6 +40,5 @@ export const openCustomerPortalAction = actionClient.action(async () => {
 		return_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`,
 	});
 
-	// Retornamos a URL para o frontend executar o redirecionamento
 	return { url: portalSession.url };
 });
