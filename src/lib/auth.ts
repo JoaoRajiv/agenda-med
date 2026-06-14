@@ -82,4 +82,8 @@ export const auth = betterAuth({
 	emailAndPassword: {
 		enabled: true,
 	},
+	trustedOrigins: [
+		"https://https://agenda-med-psi.vercel.app",
+		process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "",
+	],
 });
