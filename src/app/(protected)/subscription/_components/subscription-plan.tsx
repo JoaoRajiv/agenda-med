@@ -5,6 +5,7 @@ import { Check, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
+import { activateFreePlan } from "@/actions/active-free-plan";
 import { createStripeCheckout } from "@/actions/create-stripe-checkout";
 import { openCustomerPortalAction } from "@/actions/stripe-portal";
 import { Badge } from "@/components/ui/badge";
@@ -19,6 +20,7 @@ import {
 
 interface SubscriptionPlanProps {
 	active?: boolean;
+	planKey: "free" | "essential" | "pro";
 	planName: string;
 	description: string;
 	price: number;
@@ -30,7 +32,8 @@ interface SubscriptionPlanProps {
 }
 
 export function SubscriptionPlan({
-	active = false,
+	active,
+	planKey,
 	planName,
 	description,
 	price,
@@ -39,6 +42,7 @@ export function SubscriptionPlan({
 	features,
 }: SubscriptionPlanProps) {
 	const router = useRouter();
+	const isFreePlan = price === 0; // Se o preço for 0, é garantido que é o plano grátis
 
 	const createStripeCheckoutAction = useAction(createStripeCheckout, {
 		onSuccess: async ({ data }) => {
@@ -59,6 +63,15 @@ export function SubscriptionPlan({
 		},
 	});
 
+	const activateFreePlanAction = useAction(activateFreePlan, {
+		onSuccess: () => {
+			router.refresh();
+		},
+		onError: ({ error }) => {
+			toast.error(`Erro ao ativar o plano gratuito: ${error}`);
+		},
+	});
+
 	const { execute } = useAction(openCustomerPortalAction, {
 		// Callbacks do next-safe-action
 		onSuccess: ({ data }) => {
@@ -74,8 +87,26 @@ export function SubscriptionPlan({
 	});
 
 	const handleSubscribe = async () => {
+		console.log("DEBUG: handleSubscribe chamado");
 		createStripeCheckoutAction.execute();
 	};
+
+	const handleActivateFreePlan = () => {
+		console.log("DEBUG: handleActivateFreePlan chamado para plano:", planKey);
+		activateFreePlanAction.execute();
+	};
+
+	const isLoading =
+		createStripeCheckoutAction.isExecuting ||
+		activateFreePlanAction.isExecuting;
+	const isCurrentFreePlan = active && isFreePlan;
+
+	console.log("DEBUG SubscriptionPlan:", {
+		planKey,
+		active,
+		isFreePlan,
+		isCurrentFreePlan,
+	});
 	return (
 		<Card className="relative flex flex-col h-full border-2 border-neutral-200 transition-all duration-300 hover:border-teal-500 hover:shadow-lg">
 			{/* Badge/Status Area */}
@@ -132,29 +163,58 @@ export function SubscriptionPlan({
 
 			{/* Action Button */}
 			<CardContent className="pt-0">
-				{active ? (
+				{isCurrentFreePlan ? (
+					<Button variant="outline" className="w-full" disabled>
+						Plano atual
+					</Button>
+				) : active && !isFreePlan ? (
 					<Button
 						variant={"outline"}
 						className="w-full"
 						aria-label="Plano atual ativo"
-						onClick={() => execute()}
+						onClick={() => {
+							console.log("DEBUG: Clicou em Gerenciar Plano");
+							execute();
+						}}
 					>
 						Gerenciar Plano
 					</Button>
-				) : (
+				) : isFreePlan ? (
 					<Button
-						onClick={handleSubscribe}
+						onClick={() => {
+							console.log("DEBUG: Clicou em Ativar Plano Grátis");
+							handleActivateFreePlan();
+						}}
 						className="w-full bg-primary text-white  transition-colors"
-						disabled={createStripeCheckoutAction.isExecuting}
+						disabled={isLoading}
 						aria-label={`Inscrever-se no plano ${planName}`}
 					>
-						{createStripeCheckoutAction.isExecuting ? (
+						{isLoading ? (
 							<Loader2
 								className="animate-spin h-5 w-5 text-white"
 								aria-hidden="true"
 							/>
 						) : (
-							`Assinar`
+							"Ativar plano grátis"
+						)}
+					</Button>
+				) : (
+					<Button
+						onClick={() => {
+							console.log("DEBUG: Clicou em Assinar");
+							handleSubscribe();
+						}}
+						className="w-full bg-primary text-white  transition-colors"
+						disabled={isLoading}
+						aria-label={`Inscrever-se no plano ${planName}`}
+					>
+						{isLoading ? (
+							<Loader2
+								className="animate-spin h-5 w-5 text-white"
+								aria-hidden="true"
+							/>
+						) : (
+							"Assinar"
 						)}
 					</Button>
 				)}

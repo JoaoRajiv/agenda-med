@@ -17,18 +17,13 @@ const ClinicFormPage = async () => {
 	if (!session?.user) {
 		redirect("/authentication");
 	}
-
-	if (!session.user.clinic) {
-		redirect("/clinic-form");
-	}
-
-	if (!session.user.plan) {
-		redirect("/new-subscription");
-	}
+	// if (!session.user.plan) {
+	// 	redirect("/new-subscription");
+	// }
 	return (
 		<div>
 			<Dialog open>
-				<DialogContent className="sm:max-w-106.25">
+				<DialogContent className="sm:max-w-110">
 					<DialogHeader>
 						<DialogTitle>Adicionar clínica</DialogTitle>
 						<DialogDescription>

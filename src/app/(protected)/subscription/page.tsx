@@ -54,6 +54,7 @@ const SubscriptionPage = async () => {
 						description="Ideal para clínicas que estão começando e querem testar a plataforma."
 						active={plan === "free"}
 						features={["Acesso a funcionalidades básicas", "Suporte por email"]}
+						planKey="free"
 						planName="Plano Basic"
 						price={0}
 					/>
@@ -65,6 +66,7 @@ const SubscriptionPage = async () => {
 							"Suporte prioritário por email e chat",
 							"Relatórios avançados",
 						]}
+						planKey="essential"
 						planName="Plano Essential"
 						price={199.99}
 					/>
@@ -79,6 +81,7 @@ const SubscriptionPage = async () => {
 							"Treinamento para equipe",
 							"Acesso antecipado a novas funcionalidades",
 						]}
+						planKey="pro"
 						planName="Plano Pro"
 						price={499.99}
 					/>

@@ -4,6 +4,8 @@
 	"private": true,
 	"scripts": {
 		"dev": "next dev --turbopack",
+		"clean": "pnpm dlx rimraf .next",
+		"dev:clean": "pnpm run clean && pnpm dev",
 		"build": "next build",
 		"start": "next start",
 		"lint": "biome lint .",
