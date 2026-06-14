@@ -17,7 +17,7 @@ export const upsertPatient = actionClient
 		const session = await auth.api.getSession({
 			headers: await headers(),
 		});
-		const clinicId = session?.user?.clinic?.id;
+		const clinicId = session?.user.clinic?.id;
 
 		if (!clinicId) {
 			throw new Error("Usuário não está associado a nenhuma clínica.");
