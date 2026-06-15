@@ -3,7 +3,7 @@
 import { addMonths, format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Calendar as CalendarIcon } from "lucide-react";
-import { parseAsIsoDate, useQueryState } from "nuqs";
+import { parseAsString, useQueryState } from "nuqs"; // 1. Mude para parseAsString
 import type * as React from "react";
 import type { DateRange } from "react-day-picker";
 
@@ -19,30 +19,38 @@ import { cn } from "@/lib/utils";
 export function DatePicker({
 	className,
 }: React.HTMLAttributes<HTMLDivElement>) {
-	const [from, setFrom] = useQueryState(
+	// 2. Controlamos o estado da URL como string exata "YYYY-MM-DD"
+	const [fromStr, setFromStr] = useQueryState(
 		"from",
-		parseAsIsoDate.withDefault(new Date()),
+		parseAsString.withDefault(format(new Date(), "yyyy-MM-dd")),
 	);
-	const [to, setTo] = useQueryState(
+	const [toStr, setToStr] = useQueryState(
 		"to",
-		parseAsIsoDate.withDefault(addMonths(new Date(), 1)),
+		parseAsString.withDefault(format(addMonths(new Date(), 1), "yyyy-MM-dd")),
 	);
+
+	// 3. Forçamos a criação da data na meia-noite local anexando o T00:00:00
+	const from = fromStr ? new Date(`${fromStr}T00:00:00`) : undefined;
+	const to = toStr ? new Date(`${toStr}T00:00:00`) : undefined;
+
 	const handleDateSelect = (dateRange: DateRange | undefined) => {
 		if (dateRange?.from) {
-			setFrom(dateRange.from, {
+			setFromStr(format(dateRange.from, "yyyy-MM-dd"), {
 				shallow: false,
 			});
 		}
 		if (dateRange?.to) {
-			setTo(dateRange.to, {
+			setToStr(format(dateRange.to, "yyyy-MM-dd"), {
 				shallow: false,
 			});
 		}
 	};
+
 	const date = {
 		from,
 		to,
 	};
+
 	return (
 		<div className={cn("grid gap-2", className)}>
 			<Popover>
@@ -52,10 +60,10 @@ export function DatePicker({
 						variant={"outline"}
 						className={cn(
 							"justify-start text-left font-normal",
-							!date && "text-muted-foreground",
+							!date.from && "text-muted-foreground",
 						)}
 					>
-						<CalendarIcon />
+						<CalendarIcon className="mr-2 h-4 w-4" />
 						{date?.from ? (
 							date.to ? (
 								<>
@@ -68,10 +76,11 @@ export function DatePicker({
 									})}
 								</>
 							) : (
-								format(date.from, "LLL dd, y")
+								// Adicionado a localidade ptBR aqui também por segurança
+								format(date.from, "LLL dd, y", { locale: ptBR })
 							)
 						) : (
-							<span>Pick a date</span>
+							<span>Selecione uma data</span>
 						)}
 					</Button>
 				</PopoverTrigger>

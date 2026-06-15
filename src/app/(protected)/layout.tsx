@@ -1,5 +1,5 @@
+import { ProgressBarProvider } from "@/components/providers/progress-bar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-
 import { AppSidebar } from "./_components/app-sidebar";
 
 const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
@@ -8,7 +8,7 @@ const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
 			<AppSidebar />
 			<main className={`w-full antialiased`}>
 				<SidebarTrigger />
-				{children}
+				<ProgressBarProvider>{children}</ProgressBarProvider>
 			</main>
 		</SidebarProvider>
 	);
