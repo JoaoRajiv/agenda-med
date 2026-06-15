@@ -15,6 +15,14 @@ const googleFont = localFont({
 export const metadata: Metadata = {
 	title: "Agenda - MED",
 	description: "Agende suas consultas médicas de forma fácil e rápida.",
+	icons: {
+		icon: [
+			{
+				url: "/icon.svg",
+				sizes: "any",
+			},
+		],
+	},
 };
 
 export default function RootLayout({
