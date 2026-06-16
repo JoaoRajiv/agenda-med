@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/suspicious/noDocumentCookie: <explanation> */
 "use client";
 
 import { cva, type VariantProps } from "class-variance-authority";
@@ -84,6 +83,7 @@ function SidebarProvider({
 			}
 
 			// This sets the cookie to keep the sidebar state.
+			// biome-ignore lint/suspicious/noDocumentCookie: <explanation>
 			document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
 		},
 		[setOpenProp, open],

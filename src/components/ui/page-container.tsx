@@ -1,5 +1,15 @@
-export const PageContainer = ({ children }: { children: React.ReactNode }) => {
-	return <div className="space-y-6 p-6 overflow-x-clip">{children}</div>;
+export const PageContainer = ({
+	children,
+	className,
+}: {
+	children: React.ReactNode;
+	className?: string;
+}) => {
+	return (
+		<div className={`space-y-6 p-6 overflow-x-clip ${className ?? ""}`}>
+			{children}
+		</div>
+	);
 };
 
 export const PageHeader = ({ children }: { children: React.ReactNode }) => {
@@ -32,6 +42,14 @@ export const PageActions = ({ children }: { children: React.ReactNode }) => {
 	return <div className="flex items-center gap-2">{children}</div>;
 };
 
-export const PageContent = ({ children }: { children: React.ReactNode }) => {
-	return <div className="space-y-6">{children}</div>;
+export const PageContent = ({
+	children,
+	className,
+}: {
+	children: React.ReactNode;
+	className?: string;
+}) => {
+	return (
+		<div className={`min-h-0 space-y-6 ${className ?? ""}`}>{children}</div>
+	);
 };

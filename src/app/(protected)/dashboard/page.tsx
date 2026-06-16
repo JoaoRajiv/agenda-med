@@ -50,10 +50,6 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
 		redirect("/clinic-form");
 	}
 
-	// if (!session.user.plan) {
-	// 	redirect("/new-subscription");
-	// }
-
 	const { from, to } = await searchParams;
 
 	if (!from || !to) {
@@ -85,7 +81,7 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
 	});
 
 	return (
-		<PageContainer>
+		<PageContainer className="flex h-full min-h-0 flex-col overflow-hidden">
 			<PageHeader>
 				<PageHeaderContent>
 					<PageTitle>Dashboard</PageTitle>
@@ -95,19 +91,19 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
 					<DatePicker />
 				</PageActions>
 			</PageHeader>
-			<PageContent>
+			<PageContent className="flex min-h-0 flex-1 flex-col overflow-hidden">
 				<StatsCards
 					totalRevenue={totalRevenue?.total ? Number(totalRevenue.total) : null}
 					totalAppointments={totalAppointments?.total ?? 0}
 					totalPatients={totalPatients?.total ?? 0}
 					totalDoctors={totalDoctors?.total ?? 0}
 				/>
-				<div className="grid grid-cols-[2.25fr_1fr] gap-4 mt-4">
+				<div className="grid min-h-0 grid-rows-2 lg:grid-rows-1 lg:grid-cols-[2.25fr_1fr] gap-4">
 					<AppointmentsChart dailyAppointmentsData={dailyAppointmentsData} />
 					<TopDoctors topDoctors={topDoctors} />
 				</div>
-				<div className="grid grid-cols-[2.25fr_1fr] max-h-50 gap-4 mt-4">
-					<Card>
+				<div className="grid min-h-0 flex-1 lg:grid-cols-[2.25fr_1fr] gap-4">
+					<Card className="min-h-0 overflow-hidden">
 						<CardHeader>
 							<div className="flex items-center gap-2">
 								<Calendar className="w-5 h-5 text-gray-400" />
@@ -116,7 +112,7 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
 								</CardTitle>
 							</div>
 						</CardHeader>
-						<CardContent>
+						<CardContent className="min-h-0 flex-1 overflow-auto">
 							<DataTable
 								data={todayAppointments}
 								columns={appointmentsTableColumns}

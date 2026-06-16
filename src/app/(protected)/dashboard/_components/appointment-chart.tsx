@@ -60,16 +60,19 @@ const AppointmentsChart = ({
 	} satisfies ChartConfig;
 
 	return (
-		<Card>
-			<CardHeader className="flex flex-row items-center gap-4">
+		<Card className="flex h-full min-h-0 flex-col overflow-hidden">
+			<CardHeader className="flex shrink-0 flex-row items-center gap-4">
 				<DollarSign className="text-primary" />
 				<CardTitle>Agendamentos e Faturamento</CardTitle>
 			</CardHeader>
-			<CardContent>
-				<ChartContainer config={chartConfig} className="min-h-50">
+			<CardContent className="min-h-0 flex-1 px-2">
+				<ChartContainer
+					config={chartConfig}
+					className="h-full w-full aspect-auto "
+				>
 					<AreaChart
 						data={chartData}
-						margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+						margin={{ top: 20, right: 30, bottom: 5 }}
 					>
 						<CartesianGrid strokeDasharray="3 3" />
 						<XAxis

@@ -6,11 +6,12 @@ const ProtectedLayout = ({ children }: { children: React.ReactNode }) => {
 	return (
 		<SidebarProvider>
 			<AppSidebar />
-			<main className={`w-full antialiased`}>
+			<main className="flex min-h-screen w-full flex-col overflow-hidden antialiased">
 				<SidebarTrigger />
 				<ProgressBarProvider>{children}</ProgressBarProvider>
 			</main>
 		</SidebarProvider>
 	);
 };
+
 export default ProtectedLayout;
