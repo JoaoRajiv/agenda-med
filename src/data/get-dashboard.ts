@@ -85,7 +85,7 @@ export const getDashboard = async ({ from, to, session }: Params) => {
 			.where(eq(doctorsTable.clinicId, session.user.clinic.id))
 			.groupBy(doctorsTable.id)
 			.orderBy(desc(count(appointmentsTable.id)))
-			.limit(10),
+			.limit(5),
 		db
 			.select({
 				specialty: doctorsTable.specialty,

@@ -23,7 +23,7 @@ interface TopDoctorsProps {
 
 export function TopDoctors({ topDoctors }: TopDoctorsProps) {
 	return (
-		<Card className="bg-white rounded-lg">
+		<Card className="bg-white rounded-lg max-h-81.25 flex-1 overflow-auto  scrollbar-none">
 			{/* Header */}
 			<CardHeader className="flex items-center justify-between ">
 				<CardTitle className="flex items-center gap-2">
