@@ -45,10 +45,8 @@ Por meio de um painel administrativo, o usuário pode acompanhar dados important
 A dashboard reúne os principais dados da clínica em um único local, permitindo acompanhar a movimentação dos atendimentos e do faturamento dentro do período selecionado.
 
 <p align="center">
-  <img src="./docs/images/dashboard.png" alt="Dashboard do Agenda-Med" width="100%" />
+  <img src="./public/dashboard.png" alt="Dashboard do Agenda-Med" width="100%" />
 </p>
-
-> Salve a imagem da dashboard em `docs/images/dashboard.png` para que ela seja exibida no repositório.
 
 ## Tecnologias utilizadas
 
