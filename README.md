@@ -1,36 +1,107 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
 
-## Getting Started
+<img src="./public/logo.svg" alt="Logo do Agenda-Med" width="72" />
 
-First, run the development server:
+# Agenda-Med
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Gestão de clínicas, agendamentos e assinaturas em uma única plataforma
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+O **Agenda-Med** é uma aplicação web desenvolvida para facilitar a rotina administrativa de clínicas. A plataforma centraliza o cadastro de médicos e pacientes, o controle de agendamentos e o acompanhamento dos principais indicadores da operação.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+[Ver demonstração](https://agenda-med-psi.vercel.app/) · [Reportar problema](../../issues)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+</div>
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Sobre o projeto
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+O projeto foi criado com foco em uma experiência simples, organizada e intuitiva para a gestão de clínicas.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Por meio de um painel administrativo, o usuário pode acompanhar dados importantes da clínica, gerenciar sua agenda, manter os cadastros atualizados e administrar o plano de assinatura utilizado.
 
-## Deploy on Vercel
+> Este é um projeto de portfólio. Os dados apresentados na demonstração devem ser fictícios.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Principais funcionalidades
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Dashboard com indicadores de faturamento, agendamentos, médicos e pacientes;
+- Gráfico de agendamentos e faturamento por período;
+- Visualização dos médicos e especialidades com maior número de atendimentos;
+- Listagem dos agendamentos do dia;
+- Cadastro, edição e exclusão de médicos;
+- Definição de especialidade, disponibilidade e valor da consulta;
+- Cadastro, edição e exclusão de pacientes;
+- Criação e gerenciamento de agendamentos;
+- Consulta de horários disponíveis;
+- Autenticação de usuários;
+- Cadastro e associação de clínicas;
+- Planos de assinatura gratuitos e pagos;
+- Fluxo de pagamento e gerenciamento de assinatura.
+
+## Visão geral
+
+### Dashboard
+
+A dashboard reúne os principais dados da clínica em um único local, permitindo acompanhar a movimentação dos atendimentos e do faturamento dentro do período selecionado.
+
+<p align="center">
+  <img src="./docs/images/dashboard.png" alt="Dashboard do Agenda-Med" width="100%" />
+</p>
+
+> Salve a imagem da dashboard em `docs/images/dashboard.png` para que ela seja exibida no repositório.
+
+## Tecnologias utilizadas
+
+O projeto foi desenvolvido com:
+
+- Next.js e TypeScript;
+- PostgreSQL e Drizzle ORM;
+- Better Auth;
+- Stripe;
+- Tailwind CSS e shadcn/ui.
+
+## Planos de assinatura
+
+O Agenda-Med conta com diferentes níveis de assinatura:
+
+- **Basic:** acesso inicial às funcionalidades essenciais;
+- **Essential:** recursos completos e suporte prioritário;
+- **Pro:** recursos adicionais, integrações e possibilidades de personalização.
+
+Os valores e benefícios podem ser ajustados conforme a estratégia comercial da plataforma.
+
+## Próximas melhorias
+
+- Confirmação e lembretes de consultas;
+- Histórico de atendimentos dos pacientes;
+- Relatórios exportáveis;
+- Perfis e permissões para diferentes usuários;
+- Integração com WhatsApp;
+- Melhorias de acessibilidade;
+- Testes automatizados;
+- Expansão dos indicadores da dashboard.
+
+## Aprendizados
+
+O desenvolvimento do Agenda-Med proporcionou experiência prática na construção de um produto digital completo, envolvendo:
+
+- organização de fluxos administrativos;
+- criação de interfaces orientadas à usabilidade;
+- gerenciamento de dados relacionados;
+- autenticação e controle de acesso;
+- integração de pagamentos recorrentes;
+- estruturação de um produto baseado em assinaturas.
+
+## Autor
+
+Desenvolvido por **Rajiv dev**.
+
+[LinkedIn](https://www.linkedin.com/in/rajiv-tavares/) · [GitHub](https://github.com/JoaoRajiv)
+
+---
+
+<div align="center">
+
+Este projeto está em evolução. Sugestões e contribuições são bem-vindas.
+
+</div>
