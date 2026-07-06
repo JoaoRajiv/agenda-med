@@ -1,5 +1,5 @@
 "use server";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { z } from "zod";
@@ -19,19 +19,21 @@ export const deleteDoctor = actionClient
 		const session = await auth.api.getSession({
 			headers: await headers(),
 		});
-		if (!session?.user) {
+		if (!session?.user?.clinic?.id) {
 			throw new Error("Unauthorized");
 		}
-		const doctor = await db.query.doctorsTable.findFirst({
-			where: eq(doctorsTable.id, parsedInput.id),
-		});
-		if (!doctor) {
+		const [deleted] = await db
+			.delete(doctorsTable)
+			.where(
+				and(
+					eq(doctorsTable.id, parsedInput.id),
+					eq(doctorsTable.clinicId, session.user.clinic.id),
+				),
+			)
+			.returning({ id: doctorsTable.id });
+		if (!deleted) {
 			throw new Error("Doctor not found");
 		}
-		if (doctor.clinicId !== session.user.clinic?.id) {
-			throw new Error("Unauthorized");
-		}
-		await db.delete(doctorsTable).where(eq(doctorsTable.id, parsedInput.id));
 		revalidatePath("/doctors");
 		revalidatePath("/dashboard");
 	});

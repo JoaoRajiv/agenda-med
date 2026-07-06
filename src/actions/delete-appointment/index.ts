@@ -1,6 +1,6 @@
 "use server";
 
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { z } from "zod";
@@ -20,20 +20,20 @@ export const deleteAppointment = actionClient
 		const session = await auth.api.getSession({
 			headers: await headers(),
 		});
-		if (!session?.user) {
+		if (!session?.user?.clinic?.id) {
 			throw new Error("Unauthorized");
 		}
-		const appointment = await db.query.appointmentsTable.findFirst({
-			where: eq(appointmentsTable.id, parsedInput.id),
-		});
-		if (!appointment) {
-			throw new Error("Agendamento não encontrado");
-		}
-		if (appointment.clinicId !== session.user.clinic?.id) {
-			throw new Error("Agendamento não encontrado");
-		}
-		await db
+		const [deleted] = await db
 			.delete(appointmentsTable)
-			.where(eq(appointmentsTable.id, parsedInput.id));
+			.where(
+				and(
+					eq(appointmentsTable.id, parsedInput.id),
+					eq(appointmentsTable.clinicId, session.user.clinic.id),
+				),
+			)
+			.returning({ id: appointmentsTable.id });
+		if (!deleted) {
+			throw new Error("Agendamento não encontrado");
+		}
 		revalidatePath("/appointments");
 	});

@@ -1,14 +1,14 @@
 "use server";
 
 import dayjs from "dayjs";
+import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { checkPlanLimit } from "@/data/check-plan-limits";
 import { db } from "@/db";
-import { appointmentsTable } from "@/db/schema";
+import { appointmentsTable, doctorsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { actionClient } from "@/lib/next-safe-action";
-import { getAvailableTimes } from "../get-available-times";
 import { createAppointmentSchema } from "./schema";
 
 export const createAppointment = actionClient
@@ -32,27 +32,36 @@ export const createAppointment = actionClient
 			throw new Error("FREE_LIMIT_REACHED:appointments");
 		}
 
-		const availableTimes = await getAvailableTimes({
-			doctorId: parsedInput.doctorId,
-			date: dayjs(parsedInput.date).format("YYYY-MM-DD"),
+		const doctor = await db.query.doctorsTable.findFirst({
+			where: eq(doctorsTable.id, parsedInput.doctorId),
 		});
-		if (!availableTimes?.data) {
-			throw new Error("No available times");
+		if (!doctor) {
+			throw new Error("Doctor not found");
 		}
-		const isTimeAvailable = availableTimes.data?.some(
-			(time) => time.value === parsedInput.time && time.available,
-		);
-		if (!isTimeAvailable) {
-			throw new Error("Time not available");
-		}
+
 		const appointmentDateTime = dayjs(parsedInput.date)
 			.set("hour", Number(parsedInput.time.split(":")[0]))
 			.set("minute", Number(parsedInput.time.split(":")[1]))
 			.toDate();
 
+		const [existing] = await db
+			.select({ id: appointmentsTable.id })
+			.from(appointmentsTable)
+			.where(
+				and(
+					eq(appointmentsTable.doctorId, parsedInput.doctorId),
+					eq(appointmentsTable.date, appointmentDateTime),
+				),
+			)
+			.limit(1);
+
+		if (existing) {
+			throw new Error("Time not available");
+		}
+
 		await db.insert(appointmentsTable).values({
 			...parsedInput,
-			clinicId: session?.user.clinic?.id,
+			clinicId: session.user.clinic.id,
 			date: appointmentDateTime,
 		});
 

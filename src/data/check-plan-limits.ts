@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { count, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { db } from "@/db";
 import { appointmentsTable, doctorsTable, patientsTable } from "@/db/schema";
@@ -24,9 +24,9 @@ export async function checkPlanLimit(
 	}
 
 	const limit = FREE_LIMITS[type];
-	const count = await countResources(clinicId, type);
+	const result = await countResources(clinicId, type);
 
-	return { allowed: count < limit, limit, count };
+	return { allowed: result < limit, limit, count: result };
 }
 
 async function countResources(
@@ -40,10 +40,10 @@ async function countResources(
 	};
 
 	const table = tableMap[type];
-	const rows = await db
-		.select({ id: table.id })
+	const [row] = await db
+		.select({ value: count() })
 		.from(table)
 		.where(eq(table.clinicId, clinicId));
 
-	return rows.length;
+	return row?.value ?? 0;
 }

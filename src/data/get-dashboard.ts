@@ -109,8 +109,16 @@ export const getDashboard = async ({ from, to, session }: Params) => {
 				lte(appointmentsTable.date, dayjs().endOf("day").toDate()),
 			),
 			with: {
-				patient: true,
-				doctor: true,
+				patient: {
+					columns: {
+						id: true,
+						name: true,
+						email: true,
+						phoneNumber: true,
+						sex: true,
+					},
+				},
+				doctor: { columns: { id: true, name: true, specialty: true } },
 			},
 		}),
 		db

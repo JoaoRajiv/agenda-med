@@ -43,8 +43,16 @@ export default async function SchedulesPage() {
 		db.query.appointmentsTable.findMany({
 			where: eq(appointmentsTable.clinicId, session.user.clinic?.id),
 			with: {
-				patient: true,
-				doctor: true,
+				patient: {
+					columns: {
+						id: true,
+						name: true,
+						email: true,
+						phoneNumber: true,
+						sex: true,
+					},
+				},
+				doctor: { columns: { id: true, name: true, specialty: true } },
 			},
 		}),
 	]);
