@@ -3,13 +3,12 @@
 import dayjs from "dayjs";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
-
+import { checkPlanLimit } from "@/data/check-plan-limits";
 import { db } from "@/db";
 import { appointmentsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { actionClient } from "@/lib/next-safe-action";
 import { getAvailableTimes } from "../get-available-times";
-// import { getAvailableTimes } from "../get-available-times";
 import { createAppointmentSchema } from "./schema";
 
 export const createAppointment = actionClient
@@ -24,6 +23,15 @@ export const createAppointment = actionClient
 		if (!session?.user.clinic?.id) {
 			throw new Error("Clinic not found");
 		}
+
+		const { allowed } = await checkPlanLimit(
+			session.user.clinic.id,
+			"appointments",
+		);
+		if (!allowed) {
+			throw new Error("FREE_LIMIT_REACHED:appointments");
+		}
+
 		const availableTimes = await getAvailableTimes({
 			doctorId: parsedInput.doctorId,
 			date: dayjs(parsedInput.date).format("YYYY-MM-DD"),

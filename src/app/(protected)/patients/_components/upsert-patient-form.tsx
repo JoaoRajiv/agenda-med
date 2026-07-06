@@ -67,12 +67,14 @@ interface UpsertPatientFormProps {
 	onSuccess: () => void;
 	patient?: typeof patientsTable.$inferSelect;
 	isOpen?: boolean;
+	onLimitReached?: () => void;
 }
 
 const UpsertPatientForm = ({
 	patient,
 	onSuccess,
 	isOpen,
+	onLimitReached,
 }: UpsertPatientFormProps) => {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -98,7 +100,11 @@ const UpsertPatientForm = ({
 			onSuccess?.();
 			form.reset();
 		},
-		onError: () => {
+		onError: ({ error }) => {
+			if (error?.serverError?.startsWith("FREE_LIMIT_REACHED:")) {
+				onLimitReached?.();
+				return;
+			}
 			toast.error("Erro ao salvar paciente.");
 		},
 	});

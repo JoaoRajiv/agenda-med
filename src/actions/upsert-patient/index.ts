@@ -3,7 +3,7 @@
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
-
+import { checkPlanLimit } from "@/data/check-plan-limits";
 import { db } from "@/db";
 import { patientsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
@@ -21,6 +21,14 @@ export const upsertPatient = actionClient
 
 		if (!clinicId) {
 			throw new Error("Usuário não está associado a nenhuma clínica.");
+		}
+
+		const isNewPatient = !parsedInput.id;
+		if (isNewPatient) {
+			const { allowed } = await checkPlanLimit(clinicId, "patients");
+			if (!allowed) {
+				throw new Error("FREE_LIMIT_REACHED:patients");
+			}
 		}
 
 		if (parsedInput.id) {

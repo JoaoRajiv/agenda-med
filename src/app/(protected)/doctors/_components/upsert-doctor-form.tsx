@@ -88,9 +88,14 @@ const formSchema = z
 interface UpsertDoctorFormProps {
 	doctor?: typeof doctorsTable.$inferSelect;
 	onSuccess?: () => void;
+	onLimitReached?: () => void;
 }
 
-const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
+const UpsertDoctorForm = ({
+	doctor,
+	onSuccess,
+	onLimitReached,
+}: UpsertDoctorFormProps) => {
 	const form = useForm<z.infer<typeof formSchema>>({
 		shouldUnregister: true,
 		resolver: zodResolver(formSchema),
@@ -109,7 +114,11 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
 			toast.success("Médico adicionado com sucesso.");
 			onSuccess?.();
 		},
-		onError: () => {
+		onError: ({ error }) => {
+			if (error?.serverError?.startsWith("FREE_LIMIT_REACHED:")) {
+				onLimitReached?.();
+				return;
+			}
 			toast.error("Erro ao adicionar médico.");
 		},
 	});

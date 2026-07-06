@@ -78,9 +78,7 @@ export function AppSidebar() {
 					<Image src="/logo.svg" alt="Doutor Agenda" width={28} height={28} />
 					<span className="font-nunito text-md font-bold">agenda.med</span>
 				</div>
-				{session.data?.user?.plan && (
-					<PlanBadge plan={session.data.user.plan} size="sm" />
-				)}
+				<PlanBadge plan={session.data?.user?.plan || "free"} size="sm" />
 			</SidebarHeader>
 			<SidebarContent>
 				<SidebarGroup>

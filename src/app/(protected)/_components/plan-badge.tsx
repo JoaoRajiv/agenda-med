@@ -14,18 +14,18 @@ interface PlanConfig {
 	iconClassName: string;
 }
 
-const planConfig: Record<PlanName, PlanConfig> = {
-	Free: {
+const planConfig: Record<string, PlanConfig> = {
+	free: {
 		icon: Zap,
 		className: "bg-slate-100 text-slate-700 border-slate-200",
 		iconClassName: "text-slate-500",
 	},
-	Essential: {
+	essential: {
 		icon: Star,
 		className: "bg-teal-50 text-teal-700 border-teal-200",
 		iconClassName: "text-teal-500",
 	},
-	Pro: {
+	pro: {
 		icon: Shield,
 		className: "bg-blue-50 text-blue-700 border-blue-200",
 		iconClassName: "text-blue-500",
@@ -66,7 +66,7 @@ export function PlanBadge({
 	showIcon = true,
 	className,
 }: PlanBadgeProps) {
-	const config = planConfig[plan as PlanName] || planConfig.Essential;
+	const config = planConfig[plan] || planConfig.free;
 	const sizes = sizeConfig[size];
 	const Icon = config.icon;
 

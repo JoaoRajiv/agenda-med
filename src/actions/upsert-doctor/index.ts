@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
-
+import { checkPlanLimit } from "@/data/check-plan-limits";
 import { db } from "@/db";
 import { doctorsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
@@ -17,13 +17,13 @@ dayjs.extend(utc);
 export const upsertDoctor = actionClient
 	.schema(upsertDoctorSchema)
 	.action(async ({ parsedInput }) => {
-		const availableFromTime = parsedInput.availableFromTime; // 15:30:00
-		const availableToTime = parsedInput.availableToTime; // 16:00:00
+		const availableFromTime = parsedInput.availableFromTime;
+		const availableToTime = parsedInput.availableToTime;
 
 		const availableFromTimeUTC = dayjs()
-			.set("hour", Number(availableFromTime.split(":")[0])) // [15, 30, 00]
-			.set("minute", Number(availableFromTime.split(":")[1])) // 30
-			.set("second", Number(availableFromTime.split(":")[2])) // 00
+			.set("hour", Number(availableFromTime.split(":")[0]))
+			.set("minute", Number(availableFromTime.split(":")[1]))
+			.set("second", Number(availableFromTime.split(":")[2]))
 			.utc();
 		const availableToTimeUTC = dayjs()
 			.set("hour", Number(availableToTime.split(":")[0]))
@@ -40,6 +40,18 @@ export const upsertDoctor = actionClient
 		if (!session?.user.clinic?.id) {
 			throw new Error("Clinic not found");
 		}
+
+		const isNewDoctor = !parsedInput.id;
+		if (isNewDoctor) {
+			const { allowed } = await checkPlanLimit(
+				session.user.clinic.id,
+				"doctors",
+			);
+			if (!allowed) {
+				throw new Error("FREE_LIMIT_REACHED:doctors");
+			}
+		}
+
 		await db
 			.insert(doctorsTable)
 			.values({

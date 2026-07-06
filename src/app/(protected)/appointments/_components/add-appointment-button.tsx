@@ -2,6 +2,7 @@
 
 import { Plus } from "lucide-react";
 import { useState } from "react";
+import { PlanUpsellModal } from "@/components/plan-upsell-modal";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import type { doctorsTable, patientsTable } from "@/db/schema";
@@ -20,20 +21,30 @@ export function AddAppointmentButton({
 	patients,
 }: AddAppointmentButtonProps) {
 	const [isOpen, setIsOpen] = useState(false);
+	const [showUpsell, setShowUpsell] = useState(false);
+
 	return (
-		<Dialog open={isOpen} onOpenChange={setIsOpen}>
-			<DialogTrigger asChild>
-				<Button size="sm">
-					<Plus />
-					Novo agendamento
-				</Button>
-			</DialogTrigger>
-			<UpsertAppointmentForm
-				doctors={doctors}
-				patients={patients}
-				isOpen={isOpen}
-				onSuccess={() => setIsOpen(false)}
+		<>
+			<Dialog open={isOpen} onOpenChange={setIsOpen}>
+				<DialogTrigger asChild>
+					<Button size="sm">
+						<Plus />
+						Novo agendamento
+					</Button>
+				</DialogTrigger>
+				<UpsertAppointmentForm
+					doctors={doctors}
+					patients={patients}
+					isOpen={isOpen}
+					onSuccess={() => setIsOpen(false)}
+					onLimitReached={() => setShowUpsell(true)}
+				/>
+			</Dialog>
+			<PlanUpsellModal
+				resourceType="appointments"
+				open={showUpsell}
+				onOpenChange={setShowUpsell}
 			/>
-		</Dialog>
+		</>
 	);
 }

@@ -71,6 +71,7 @@ interface AddAppointmentFormProps {
 	patients: (typeof patientsTable.$inferSelect)[];
 	doctors: (typeof doctorsTable.$inferSelect)[];
 	onSuccess?: () => void;
+	onLimitReached?: () => void;
 }
 
 const AddAppointmentForm = ({
@@ -78,6 +79,7 @@ const AddAppointmentForm = ({
 	doctors,
 	onSuccess,
 	isOpen,
+	onLimitReached,
 }: AddAppointmentFormProps) => {
 	const form = useForm<z.infer<typeof formSchema>>({
 		shouldUnregister: true,
@@ -150,7 +152,11 @@ const AddAppointmentForm = ({
 			toast.success("Agendamento criado com sucesso.");
 			onSuccess?.();
 		},
-		onError: () => {
+		onError: ({ error }) => {
+			if (error?.serverError?.startsWith("FREE_LIMIT_REACHED:")) {
+				onLimitReached?.();
+				return;
+			}
 			toast.error("Erro ao criar agendamento.");
 		},
 	});
