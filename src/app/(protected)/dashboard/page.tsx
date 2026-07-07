@@ -1,11 +1,9 @@
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { eq } from "drizzle-orm";
-import { Calendar } from "lucide-react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DataTable } from "@/components/ui/data-table";
+import { Suspense } from "react";
 import {
 	PageActions,
 	PageContainer,
@@ -15,16 +13,14 @@ import {
 	PageHeaderContent,
 	PageTitle,
 } from "@/components/ui/page-container";
-import { getDashboard } from "@/data/get-dashboard";
+import { Skeleton } from "@/components/ui/skeleton";
 import { db } from "@/db";
 import { usersToClinicTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
-import { appointmentsTableColumns } from "../appointments/_components/table-columns";
-import AppointmentsChart from "./_components/appointment-chart";
+import ChartsSection from "./_components/charts-section";
 import { DatePicker } from "./_components/date-picker";
-import StatsCards from "./_components/stats-card";
-import { TopDoctors } from "./_components/top-doctors";
-import { TopSpecialties } from "./_components/top-specialties";
+import StatsCardsSection from "./_components/stats-cards-section";
+import TodaySection from "./_components/today-section";
 
 dayjs.extend(utc);
 
@@ -59,26 +55,7 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
 		);
 	}
 
-	const {
-		totalRevenue,
-		totalAppointments,
-		totalPatients,
-		totalDoctors,
-		topDoctors,
-		topSpecialties,
-		todayAppointments,
-		dailyAppointmentsData,
-	} = await getDashboard({
-		from,
-		to,
-		session: {
-			user: {
-				clinic: {
-					id: session.user.clinic.id,
-				},
-			},
-		},
-	});
+	const clinicId = session.user.clinic.id;
 
 	return (
 		<PageContainer className="flex h-full min-h-0 flex-col overflow-hidden">
@@ -92,35 +69,38 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
 				</PageActions>
 			</PageHeader>
 			<PageContent className="flex min-h-0 flex-1 flex-col overflow-hidden">
-				<StatsCards
-					totalRevenue={totalRevenue?.total ? Number(totalRevenue.total) : null}
-					totalAppointments={totalAppointments?.total ?? 0}
-					totalPatients={totalPatients?.total ?? 0}
-					totalDoctors={totalDoctors?.total ?? 0}
-				/>
-				<div className="grid min-h-0 grid-rows-2 lg:grid-rows-1 lg:grid-cols-[2.25fr_1fr] gap-4">
-					<AppointmentsChart dailyAppointmentsData={dailyAppointmentsData} />
-					<TopDoctors topDoctors={topDoctors} />
-				</div>
-				<div className="grid min-h-0 flex-1 lg:grid-cols-[2.25fr_1fr] gap-4">
-					<Card className="min-h-0 overflow-hidden">
-						<CardHeader>
-							<div className="flex items-center gap-2">
-								<Calendar className="w-5 h-5 text-gray-400" />
-								<CardTitle className="text-md font-bold text-gray-900">
-									Agendamentos de hoje
-								</CardTitle>
-							</div>
-						</CardHeader>
-						<CardContent className="min-h-0 flex-1 overflow-auto">
-							<DataTable
-								data={todayAppointments}
-								columns={appointmentsTableColumns}
-							/>
-						</CardContent>
-					</Card>
-					<TopSpecialties topSpecialties={topSpecialties} />
-				</div>
+				<Suspense
+					fallback={
+						<div className="animate-fade-in grid grid-cols-2 gap-4 lg:grid-cols-4">
+							<Skeleton className="h-24" />
+							<Skeleton className="h-24" />
+							<Skeleton className="h-24" />
+							<Skeleton className="h-24" />
+						</div>
+					}
+				>
+					<StatsCardsSection clinicId={clinicId} from={from} to={to} />
+				</Suspense>
+				<Suspense
+					fallback={
+						<div className="animate-fade-in grid min-h-0 grid-rows-2 lg:grid-rows-1 lg:grid-cols-[2.25fr_1fr] gap-4">
+							<Skeleton className="min-h-[300px]" />
+							<Skeleton className="min-h-[300px]" />
+						</div>
+					}
+				>
+					<ChartsSection clinicId={clinicId} from={from} to={to} />
+				</Suspense>
+				<Suspense
+					fallback={
+						<div className="animate-fade-in grid min-h-0 flex-1 lg:grid-cols-[2.25fr_1fr] gap-4">
+							<Skeleton className="min-h-[200px]" />
+							<Skeleton className="min-h-[200px]" />
+						</div>
+					}
+				>
+					<TodaySection clinicId={clinicId} from={from} to={to} />
+				</Suspense>
 			</PageContent>
 		</PageContainer>
 	);
